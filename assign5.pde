@@ -291,7 +291,7 @@ void draw() {
       
       for(int k=0; k<5; k++){
       //missile 
-        if(shootX[i]>enemyX[k]){
+        if(fighterX>enemyX[k]){
           if(closestEnemy(shootX[i], shootY[i])!=-1){
             if(shootY[i]+shoot.height/2 > enemyY[closestEnemy(shootX[i], shootY[i])]+enemy.height/2){
               bulletY[i]-=0.5;
@@ -305,7 +305,7 @@ void draw() {
           }
         }
         
-        if(shootX[i]>enemyX2[k]){
+        if(fighterX>enemyX2[k]){
           if(closestEnemy2(shootX[i], shootY[i])!=-1){
             if(shootY[i]+shoot.height/2 > enemyY2[closestEnemy2(shootX[i], shootY[i])]+enemy.height/2){
               bulletY[i]-=0.5;
@@ -322,7 +322,7 @@ void draw() {
         float  v;
         u= dist(shootX[i],shootX[i],enemyX3_2[k],enemyY3_2[k]);
         v= dist(shootX[i],shootX[i],enemyX3_1[k],enemyY3_1[k]);
-        if(shootX[i]>enemyX3_2[k]){
+        if(fighterX>enemyX3_2[k]){
           if(closestEnemy3_1(shootX[i], shootY[i])!=-1 && closestEnemy3_2(shootX[i], shootY[i])!=-1){
             if(u>v){
               if(shootY[i]+shoot.height/2 > enemyY3_1[closestEnemy3_1(shootX[i], shootY[i])]+enemy.height/2){
