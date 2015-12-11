@@ -79,7 +79,9 @@ void draw() {
         if(mousePressed){
           gameState=GAME_RUN;
           blood=39;
-          e=random(0,height-enemy.height);
+          enemyWave = 0;
+          addEnemy(enemyWave);
+          enemyXSet = 0;
           fighterX=width-fighter.width;
           fighterY=height/2-fighter.height;
           for(int i=0;i<8;i++){
