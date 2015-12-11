@@ -81,7 +81,7 @@ void draw() {
           blood=39;
           enemyWave = 0;
           addEnemy(enemyWave);
-          enemyXSet = 0;
+          enemyXCount = 0;
           fighterX=width-fighter.width;
           fighterY=height/2-fighter.height;
           for(int i=0;i<8;i++){
