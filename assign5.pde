@@ -84,11 +84,12 @@ void draw() {
           enemyXCount = 0;
           fighterX=width-fighter.width;
           fighterY=height/2-fighter.height;
+          score=0;
           for(int i=0;i<8;i++){
             explode[i]=false;
           }
           for(int i=0;i<5;i++){
-            score=0;
+            
             bulletY[i]=0;
           }
         }else{
@@ -139,26 +140,24 @@ void draw() {
      
     shootBullet();
     //missile
-    int [] Num = new int[enemyCount];
+    int [] EnemyNum = new int[enemyCount];
     for(int i=0; i<5; i++){
       if(shootX[i]!=-1||shootY[i]!=-1){
-        Num[i] = closestEnemy(shootX[i],shootY[i]);
-      if(Num[i]!= -1){
-        if(shootY[i]<enemyY[Num[i]]){
+        EnemyNum[i] = closestEnemy(shootX[i],shootY[i]);
+      if(EnemyNum[i]!= -1){
+        if(shootY[i]<enemyY[EnemyNum[i]]){
           shootY[i]+= 1;
-        }else if(enemyY[Num[i]] < shootY[i]){
+        }else if(enemyY[EnemyNum[i]] < shootY[i]){
           shootY[i]-= 1;
          }
         }
       }
     }
-
-        
     //fighter&shoot
     for(int i=0;i<5;i++){
       //missile 
       for(int k=0; k<8; k++){
-      
+  
     // bullet hit detection
     if(shootX[i] != -1 || shootY[i] != -1){
       if(enemyX[k] != -1 || enemyY[k] !=-1){
