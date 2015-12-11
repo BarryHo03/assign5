@@ -1,5 +1,5 @@
 PImage bg1, bg2, end1, end2, enemy, fighter, hp, start1, start2, treasure,shoot;
-float background1X,background2X,e,blood,fighterX,fighterY,treasureX,treasureY,enemyT1,enemyT2,enemyT3;
+float background1X,background2X,e,blood,fighterX,fighterY,treasureX,treasureY;
 float speedF=5;
 PImage explodeFlames[]= new PImage[5];
 boolean upPressed = false;
@@ -19,11 +19,8 @@ float []shootY=new float[5];
 float []bulletY=new float[5];
 boolean[]explode=new boolean[enemyCount];
 float[] distance = new float[enemyCount];
-int spacingX=70;
-int spacingY=40;
 int gameState = GAME_START;
 int currentFrame;
-int bullet = 5;
 int score=0;
 int enemyWave, enemyXCount;
 void setup () {
@@ -46,9 +43,6 @@ void setup () {
   background2X=0;
   blood=39;
   enemyXCount=-80;
-  enemyT1=1980;
-  enemyT2=990;
-  enemyT3=0;
   currentFrame=0;
   fighterX=width-fighter.width;
   fighterY=height/2 - fighter.height/2;
@@ -88,14 +82,10 @@ void draw() {
           e=random(0,height-enemy.height);
           fighterX=width-fighter.width;
           fighterY=height/2-fighter.height;
-          enemyT1=1980;
-          enemyT2=990;
-          enemyT3=0;
           for(int i=0;i<8;i++){
             explode[i]=false;
           }
           for(int i=0;i<5;i++){
-            bullet=5;
             score=0;
             bulletY[i]=0;
           }
@@ -114,16 +104,15 @@ void draw() {
          
     //enemy & its movement
     enemyXCount+=5;
-      for (int i = 0; i < enemyCount; ++i) {
-        if (enemyX[i] != -1 || enemyY[i] != -1) {
+    for(int i = 0; i < enemyCount; ++i){
+        if(enemyX[i]!= -1||enemyY[i]!= -1){
           image(enemy, enemyX[i], enemyY[i]);
           enemyX[i]+=5;
-             
-          if(enemyX[i] > 640){
-            enemyX[i] = -1;
-            enemyY[i] = -1;
+          if(enemyX[i]>640){
+            enemyX[i]=-1;
+            enemyY[i]=-1;
           }
-         }
+        }
       }
     if(enemyXCount > 1000){
       enemyXCount = -80;
@@ -131,9 +120,8 @@ void draw() {
       enemyWave %= 3;
       addEnemy(enemyWave);
      }
-    for(int i=0;i<8;i++){
-      
-      //collision
+    //collision
+    for(int i=0;i<8;i++){  
       if(enemyX[i] != -1 || enemyY[i] !=-1){
       if(isHit(enemyX[i],enemyY[i],enemy.width,enemy.height,fighterX,fighterY,fighter.width,fighter.height)){
         currentFrame=0;
@@ -148,28 +136,30 @@ void draw() {
     }
      
     shootBullet();
+    //missile
+    int [] Num = new int[enemyCount];
+    for(int i=0; i<5; i++){
+      if(shootX[i]!=-1||shootY[i]!=-1){
+        Num[i] = closestEnemy(shootX[i],shootY[i]);
+      if(Num[i]!= -1){
+        if(shootY[i]<enemyY[Num[i]]){
+          shootY[i]+= 1;
+        }else if(enemyY[Num[i]] < shootY[i]){
+          shootY[i]-= 1;
+         }
+        }
+      }
+    }
+
         
     //fighter&shoot
     for(int i=0;i<5;i++){
-      
-      
       //missile 
       for(int k=0; k<8; k++){
-        if(shootX[i] != -1 || shootY[i] != -1){
-        if(enemyX[k] != -1 || enemyY[k] !=-1){
-        if(closestEnemy(shootX[i], shootY[i])!=-1){
-          if(shootY[i]+shoot.height/2 > enemyY[closestEnemy(shootX[i], shootY[i])]+enemy.height/2){
-            shootY[i]-=0.5;
-          }
-          if(shootY[i]+shoot.height/2<enemyY[closestEnemy(shootX[i], shootY[i])]+enemy.height/2){
-            shootY[i]+=0.5;
-          }
-        }
-      }
-        }
-      // bullet hit detection
-        if(shootX[i] != -1 || shootY[i] != -1){
-        if(enemyX[k] != -1 || enemyY[k] !=-1){
+      
+    // bullet hit detection
+    if(shootX[i] != -1 || shootY[i] != -1){
+      if(enemyX[k] != -1 || enemyY[k] !=-1){
         if(isHit(enemyX[k],enemyY[k],enemy.width,enemy.height,shootX[i],shootY[i],shoot.width,shoot.height)){
           shootX[i] = shootY[i] = -1;
           currentFrame=0;
@@ -181,13 +171,9 @@ void draw() {
           scoreChange(20);
           bulletY[i]=0;
         }   
-        }
-        }
-          if(bullet>=5){
-            bullet=5;
-          }
-        }
-        
+       }
+      }
+     } 
     }
     
     
@@ -216,7 +202,7 @@ void draw() {
   }  
 }
 void shootBullet(){
-  for ( int i=0; i<5; i++){
+  for(int i=0; i<5; i++){
     if(shootX[i] != -1 || shootY[i] != -1){
       image(shoot, shootX[i], shootY[i]);
       shootX[i]-=6;
@@ -318,11 +304,12 @@ boolean isHit(float ax, float ay, float aw, float ah, float bx, float by, float 
     return false;
   }
 } 
+
 int closestEnemy(float x, float y){
  int index = -1;
  for (int i = 0; i < enemyCount;i++){
    if(x > enemyX[i]){
-     if(enemyX[i] != -1 || enemyY[i] != -1){ 
+   if(enemyX[i] != -1 || enemyY[i] != -1){
          distance[i] = dist(x,y,enemyX[i],enemyY[i]);
          float min = distance[i];
          index = i;
