@@ -81,7 +81,7 @@ void draw() {
           blood=39;
           enemyWave = 0;
           addEnemy(enemyWave);
-          enemyXCount = 0;
+          enemyXCount = -80;
           fighterX=width-fighter.width;
           fighterY=height/2-fighter.height;
           score=0;
@@ -89,7 +89,8 @@ void draw() {
             explode[i]=false;
           }
           for(int i=0;i<5;i++){
-            
+            shootX[i]  = -1;
+            shootY[i]  = -1;
             bulletY[i]=0;
           }
         }else{
@@ -137,7 +138,6 @@ void draw() {
       }
       }            
     }
-     
     shootBullet();
     //missile
     int [] EnemyNum = new int[enemyCount];
@@ -157,7 +157,6 @@ void draw() {
     for(int i=0;i<5;i++){
       //missile 
       for(int k=0; k<8; k++){
-  
     // bullet hit detection
     if(shootX[i] != -1 || shootY[i] != -1){
       if(enemyX[k] != -1 || enemyY[k] !=-1){
