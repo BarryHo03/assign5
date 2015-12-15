@@ -16,7 +16,6 @@ float []flameX=new float[enemyCount];
 float []flameY=new float[enemyCount];
 float []shootX=new float[5];
 float []shootY=new float[5];
-float []bulletY=new float[5];
 boolean[]explode=new boolean[enemyCount];
 float[] distance = new float[enemyCount];
 int gameState = GAME_START;
@@ -50,7 +49,6 @@ void setup () {
     explodeFlames[i]=loadImage("img/flame"+(i+1)+".png");
   }
   for(int i =0;i<5; i++){
-    bulletY[i]=0;
     shootX[i]  = -1;
     shootY[i]  = -1;
   }
@@ -91,8 +89,7 @@ void draw() {
           for(int i=0;i<5;i++){
             shootX[i]  = -1;
             shootY[i]  = -1;
-            bulletY[i]=0;
-          }
+           }
         }else{
         image(end1,0,0);
         }
@@ -138,6 +135,7 @@ void draw() {
       }
       }            
     }
+     
     shootBullet();
     //missile
     int [] EnemyNum = new int[enemyCount];
@@ -157,8 +155,20 @@ void draw() {
     for(int i=0;i<5;i++){
       //missile 
       for(int k=0; k<8; k++){
+      /*  if(shootX[i] != -1 || shootY[i] != -1){
+        if(enemyX[k] != -1 && enemyY[k] !=-1){
+        if(closestEnemy(shootX[i], shootY[i])!=-1){
+          if(shootY[i] > enemyY[closestEnemy(shootX[i], shootY[i])]){
+            shootY[i]-=0.5;
+          }
+          if(shootY[i]<enemyY[closestEnemy(shootX[i], shootY[i])]+enemy.height/2){
+            shootY[i]+=0.5;
+          }
+        }
+      }
+    }*/
     // bullet hit detection
-    if(shootX[i] != -1 || shootY[i] != -1){
+    if(shootX[i] != -1 && shootY[i] != -1){
       if(enemyX[k] != -1 || enemyY[k] !=-1){
         if(isHit(enemyX[k],enemyY[k],enemy.width,enemy.height,shootX[i],shootY[i],shoot.width,shoot.height)){
           shootX[i] = shootY[i] = -1;
@@ -169,7 +179,6 @@ void draw() {
           enemyX[k]=1000;
           enemyY[k]=1000;
           scoreChange(20);
-          bulletY[i]=0;
         }   
        }
       }
@@ -306,32 +315,17 @@ boolean isHit(float ax, float ay, float aw, float ah, float bx, float by, float 
 } 
 
 int closestEnemy(float x, float y){
- int index = -1;
- for (int i = 0; i < enemyCount;i++){
-   if(x > enemyX[i]){
-   if(enemyX[i] != -1 || enemyY[i] != -1){
-         distance[i] = dist(x,y,enemyX[i],enemyY[i]);
-         float min = distance[i];
-         index = i;
-         for(int j = i+1; j < enemyCount ; j++){
-           distance[j] = dist(x,y,enemyX[j],enemyY[j]);
-           if(min>distance[j]){
-             min = distance[j];
-             index = j;
-           }
-         }
-         break;
-       }
+  int enemyID = -1;
+  float dist_temp = 1000;
+  for(int i = 0; i < enemyCount ;i++){
+    float distance = dist(x,y,enemyX[i],enemyY[i]);
+    if(enemyX[i] != -1 && enemyY[i] != -1 && distance <=dist_temp){
+      dist_temp = distance;
+      enemyID = i;
     }
- }
-  if (index == -1){
-    return -1;
   }
-  else{
-    return index;
-  }
+  return enemyID;
 }
-
 
 void showBackground(){
   image(bg1,background1X-640,0);
